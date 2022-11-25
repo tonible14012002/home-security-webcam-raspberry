@@ -1,0 +1,10 @@
+^D:\HOME-SECURITY-BACKEND\RASPBERRY\DLIB-19.24.0\BUILD\TEMP.WIN-AMD64-CPYTHON-310\RELEASE\DLIB_BUILD\AVX_TEST_BUILD\CMAKEFILES\97F59B0D722C2E8678074BE40E79BC2A\GENERATE.STAMP.RULE
+setlocal
+C:\Users\nguye\AppData\Local\Programs\Python\Python310\Lib\site-packages\cmake\data\bin\cmake.exe -SD:/home-security-backend/raspberry/dlib-19.24.0/dlib/cmake_utils/test_for_avx -BD:/home-security-backend/raspberry/dlib-19.24.0/build/temp.win-amd64-cpython-310/Release/dlib_build/avx_test_build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/home-security-backend/raspberry/dlib-19.24.0/build/temp.win-amd64-cpython-310/Release/dlib_build/avx_test_build/avx_test.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

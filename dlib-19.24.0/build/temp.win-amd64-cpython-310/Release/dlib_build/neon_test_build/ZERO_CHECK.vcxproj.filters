@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\home-security-backend\raspberry\dlib-19.24.0\build\temp.win-amd64-cpython-310\Release\dlib_build\neon_test_build\CMakeFiles\40d53cb2726b7bce459fd64089a176df\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{33A015DB-5CD0-3BEE-95A1-997D5C64F283}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

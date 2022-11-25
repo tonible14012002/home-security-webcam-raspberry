@@ -1,0 +1,10 @@
+^D:\HOME-SECURITY-BACKEND\RASPBERRY\DLIB-19.24.0\DLIB\CMAKELISTS.TXT
+setlocal
+C:\Users\nguye\AppData\Local\Programs\Python\Python310\Lib\site-packages\cmake\data\bin\cmake.exe -SD:/home-security-backend/raspberry/dlib-19.24.0/tools/python -BD:/home-security-backend/raspberry/dlib-19.24.0/build/temp.win-amd64-cpython-310/Release --check-stamp-file D:/home-security-backend/raspberry/dlib-19.24.0/build/temp.win-amd64-cpython-310/Release/dlib_build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

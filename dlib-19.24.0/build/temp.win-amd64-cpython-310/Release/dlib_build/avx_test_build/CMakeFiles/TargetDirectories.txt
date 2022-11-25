@@ -1,0 +1,2 @@
+D:/home-security-backend/raspberry/dlib-19.24.0/build/temp.win-amd64-cpython-310/Release/dlib_build/avx_test_build/CMakeFiles/ALL_BUILD.dir
+D:/home-security-backend/raspberry/dlib-19.24.0/build/temp.win-amd64-cpython-310/Release/dlib_build/avx_test_build/CMakeFiles/ZERO_CHECK.dir
