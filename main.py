@@ -1,16 +1,23 @@
 from flask import Flask, Response, request, render_template
-from camera import VideoStream
+from cam import Camera
 from flask_cors import CORS
 import requests
+import keyboard
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/": {"origins": "*"}})
 
-camera = VideoStream().start()
+# camera = VideoStream().start()
+camera = Camera().start()
 
 def gen():
-    global camera
     while True:
+        try:
+            if keyboard.is_pressed('d'):
+                camera.dectect()
+            print('event listenning \n')
+        except Exception as e:
+            print(e)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + camera.get_frame() + b'\r\n\r\n')
 
