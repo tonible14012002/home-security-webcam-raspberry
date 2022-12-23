@@ -5,6 +5,9 @@ from datetime import datetime
 import time
 
 def connect_db():
+    """
+    Create new connection to database
+    """
     conn = psycopg2.connect(
         dbname='security',
         user='postgres',
@@ -15,6 +18,10 @@ def connect_db():
     return conn
 
 def add_visit(user_id):
+    """
+    Insert new visit row to database
+    corresponding to user_id
+    """
     try:
         print("adding")
         connection = connect_db()
@@ -31,18 +38,26 @@ def add_visit(user_id):
     connection.close()
 
 def cube_np_parser(cube_str):
+    """
+    convert CUBE type postges to numpy array
+    """
+
     cube_str = cube_str[1:]
     cube_str = cube_str[:-1]
     return numpy.fromstring(cube_str, dtype=float, sep=',')
 
 def encoding_parser(cube_vec_low, cube_vec_high):
-    """Convert cube type string in database to 128 dimensions array encodings.
+    """
+    Combine 2 vector in Database to form a 128-dim encoding vector
     """
     vec_low = cube_np_parser(cube_vec_low)
     vec_high = cube_np_parser(cube_vec_high)
     return numpy.concatenate((vec_low, vec_high))
 
 def get_users():
+    """
+    Get information of all current ordinary users in database
+    """
     try:
         connection = connect_db()
         cursor = connection.cursor()
@@ -70,8 +85,15 @@ def get_users():
         raise psycopg2.Error(e)
 
 def detect_face(encodings, threshold):
-    start_time = time.time()
+    """
+    Calculate the Euclidean Distance 
+    between given encodings and in database
 
+    Determine the Face is correct if distance < threshold
+    """
+
+    # for measure query time
+    start_time = time.time() 
     try:    
         connection = connect_db()
         cursor = connection.cursor()

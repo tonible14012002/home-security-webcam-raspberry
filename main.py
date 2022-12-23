@@ -11,16 +11,21 @@ cors = CORS(app, resources={r"/": {"origins": "*"}})
 camera = Camera().start()
 
 def gen():
+    pressed = False
     while True:
         try:
-            if keyboard.is_pressed('d'):
+            if not pressed and keyboard.is_pressed('d'):
+                # Dectect FACE if user hit button "d"
+                pressed = True
                 camera.dectect()
-            print('event listenning \n')
+                pressed = False
+                
         except Exception as e:
             print(e)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + camera.get_frame() + b'\r\n\r\n')
 
+# api for streamming video capture
 @app.route('/video_feed')
 def video_feed():
     # tokken = request.headers.get('Authorization', None)
@@ -34,19 +39,6 @@ def video_feed():
     #     "detail": "you are not allow"
     # }
     
-# @app.route('/')
-# def home():
-#     tokken = request.headers.get('Authorization', None)
-#     if not tokken:
-#         return {'status': 'error'}
-#     resp = requests.get('http://127.0.0.1:8000/accounts/verify/', headers={'Authorization': tokken})
-#     if resp.status_code not in range(200, 300):
-#         return {'status': 'error'}
-#     return {
-#         'status': 'success',
-#         'html': render_template('index.html')
-#     }
-  
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=False , threaded=True)
     
