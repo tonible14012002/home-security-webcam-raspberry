@@ -67,12 +67,15 @@ def get_users():
                 WHERE vec_low IS NOT NULL
             """
         )
+        users_info = cursor.fetchall()
+        connection.close()
+
         def  sumarize_user(user):
             return {
                 'id': user[0],
                 'name': f"{user[1]} {user[2]}",
             }
-        users_info = cursor.fetchall()
+
         users = list(map(sumarize_user, users_info))
         encodings = list(map(lambda user: encoding_parser(user[3], user[4]), users_info))
         return {
@@ -117,6 +120,7 @@ def detect_face(encodings, threshold):
         )
         user = cursor.fetchone()
         connection.close()
+
         print("--- %s seconds ---" % (time.time() - start_time))
         return user
 

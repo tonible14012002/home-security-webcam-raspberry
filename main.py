@@ -11,14 +11,11 @@ cors = CORS(app, resources={r"/": {"origins": "*"}})
 camera = Camera().start()
 
 def gen():
-    pressed = False
     while True:
         try:
-            if not pressed and keyboard.is_pressed('d'):
+            if keyboard.is_pressed('d'):
                 # Dectect FACE if user hit button "d"
-                pressed = True
                 camera.dectect()
-                pressed = False
                 
         except Exception as e:
             print(e)

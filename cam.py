@@ -1,4 +1,4 @@
-from utils import db
+from utils import db, http
 import cv2
 import threading
 import face_recognition
@@ -81,9 +81,12 @@ class Camera():
             if user is not None:
                 # Insert new visit row in Database
                 db.add_visit(user[0])
+                # send server notification
+                http.visit_alert(user[0])
                 self.recognized_names.append(f"{user[1]} {user[2]}")
                 # Set timeout for deleting Name shown on frame
                 threading.Timer(5, self.show_name_timeout).start()
+
             else:
                 self.recognized_names.append("Unknown")
                 threading.Timer(5, self.show_name_timeout).start()
