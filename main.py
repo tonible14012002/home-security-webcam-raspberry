@@ -12,15 +12,11 @@ camera = Camera().start()
 
 def gen():
     while True:
-        try:
-            if keyboard.is_pressed('d'):
-                # Dectect FACE if user hit button "d"
-                camera.dectect()
-                
-        except Exception as e:
-            print(e)
+        if keyboard.is_pressed('d'):
+            camera.dectect()
+
         yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + camera.get_frame() + b'\r\n\r\n')
+            b'Content-Type: image/jpeg\r\n\r\n' + camera.get_frame() + b'\r\n\r\n')
 
 # api for streamming video capture
 @app.route('/video_feed')

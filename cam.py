@@ -2,13 +2,14 @@ from utils import db, http
 import cv2
 import threading
 import face_recognition
-import numpy as np
+from utils import sk as cl_socket
 
 class Camera():
-    """
-    """
 
     def __init__(self) -> None:
+
+        # create client socket
+        # self.sock = cl_socket.start_socket()
 
         # Create camera, get first frame
         self.video = cv2.VideoCapture(0)
@@ -30,6 +31,10 @@ class Camera():
         # Mutex lock for multithread
         self.lock = threading.Lock()
 
+        # 
+
+    #
+
     def start(self):
         """
         Start capturing frames
@@ -38,7 +43,8 @@ class Camera():
         return self
 
     def __del__(self):
-        self.video.release()
+        # self.video.release()
+        pass
     
     def update(self):
         """
@@ -72,6 +78,7 @@ class Camera():
         # get (128-dimensions) vector encodings of all faces on current frame 
         # use speedup encoding if face_location is known
         encodings = face_recognition.face_encodings(self.small_img, self.small_face_locations)
+        # base on facelocation -> encodings: list
         
         # For each face encoding, compare to encoding in Database
         # Face is valid if the Euclien distance (threshold) is smaller than 0.5
@@ -79,10 +86,8 @@ class Camera():
             # compare to faces in database
             user = db.detect_face(encoding, 0.5)
             if user is not None:
-                # Insert new visit row in Database
-                db.add_visit(user[0])
-                # send server notification
-                http.visit_alert(user[0])
+                # send server notification to add new visit and alert online admin
+                http.visit_alert(user[0]) # 
                 self.recognized_names.append(f"{user[1]} {user[2]}")
                 # Set timeout for deleting Name shown on frame
                 threading.Timer(5, self.show_name_timeout).start()
@@ -101,7 +106,6 @@ class Camera():
             del self.recognized_names[0]
         self.lock.release()
                         
-
     def find_face_location(self):
         """
         Find location of faces on current frame
@@ -120,26 +124,33 @@ class Camera():
         get Current frame, display face location and recognised names
         convert frame to bytes type for streaming through HTTP
         """
-        grabbed, frame = self.read()
-        if not grabbed:
-            return
-        face_locations = self.find_face_location()
+        _, frame = self.read()
 
+        # Find face location in the small frame (faster)
+        face_locations = self.find_face_location()
+        
+        # convert face location in small frame to original size
         for (top, right, bottom, left) in face_locations:
             top*=4
             right*=4
             left*=4
             bottom*=4
+            # draw rect on frame
             cv2.rectangle(frame, (left-20, top-10), (right+20, bottom+15), (300, 0, 0), 2)        
-
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
 
+        # show name detected
         self.lock.acquire()
         for i in range(len(self.recognized_names)):
             name = self.recognized_names[i]
             cv2.putText(frame, name, (50, 30*i + 100), font, 1, (0,0,0), 1,)
         self.lock.release()
 
-        ret, jpeg = cv2.imencode('.jpg', frame) 
-        
-        return jpeg.tobytes()
+        _, jpeg = cv2.imencode('.jpg', frame) 
+        byte_buffer = jpeg.tobytes()
+
+        # send frame to server
+        # cl_socket.send_bytes(self.sock, byte_buffer)
+
+        return byte_buffer
+    
