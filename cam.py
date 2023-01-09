@@ -2,14 +2,10 @@ from utils import db, http
 import cv2
 import threading
 import face_recognition
-from utils import sk as cl_socket
 
 class Camera():
 
     def __init__(self) -> None:
-
-        # create client socket
-        # self.sock = cl_socket.start_socket()
 
         # Create camera, get first frame
         self.video = cv2.VideoCapture(0)
@@ -84,17 +80,31 @@ class Camera():
         # Face is valid if the Euclien distance (threshold) is smaller than 0.5
         for encoding in encodings:
             # compare to faces in database
-            user = db.detect_face(encoding, 0.5)
-            if user is not None:
-                # send server notification to add new visit and alert online admin
-                http.visit_alert(user[0]) # 
-                self.recognized_names.append(f"{user[1]} {user[2]}")
-                # Set timeout for deleting Name shown on frame
-                threading.Timer(5, self.show_name_timeout).start()
+            # user = db.detect_face(encoding, 0.5)
+            def on_response(response):
+                if response.status_code >= 400:
+                    self.show_recognized("Unknown")
+                    return
+                user = response.json()
+                fullname = user['first_name'] + ' ' + user['last_name']
+                self.show_recognized(fullname.strip())
+                http.visit_alert(user['id'])
 
-            else:
-                self.recognized_names.append("Unknown")
-                threading.Timer(5, self.show_name_timeout).start()
+            http.detect(encoding, on_response)
+            # if user is not None:
+            #     print(user)
+                # send server notification to add new visit and alert online admin
+                # http.visit_alert(user[0]) # 
+
+                # self.recognized_names.append(f"{user[1]} {user[2]}")
+                # Set timeout for deleting Name shown on frame
+                # threading.Timer(5, self.show_name_timeout).start()
+            # else:
+            #     self.show_recognized("Unknown")
+        
+    def show_recognized(self, name):
+        self.recognized_names.append(name)
+        threading.Timer(5, self.show_name_timeout).start()
 
     def show_name_timeout(self):
         """
@@ -148,9 +158,6 @@ class Camera():
 
         _, jpeg = cv2.imencode('.jpg', frame) 
         byte_buffer = jpeg.tobytes()
-
-        # send frame to server
-        # cl_socket.send_bytes(self.sock, byte_buffer)
 
         return byte_buffer
     
