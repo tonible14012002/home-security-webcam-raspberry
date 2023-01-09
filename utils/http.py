@@ -2,7 +2,7 @@ import requests
 import threading
 
 request = requests.sessions.Session()
-base_url = 'http://127.0.0.1:8000'
+base_url = 'http://192.168.204.1:8000'
 
 def visit_alert(uid):
     def notify ():
